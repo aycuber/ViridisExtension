@@ -113,78 +113,8 @@ const ensureProtocol = (url?: string): string | undefined => {
 };
 
 // --- Helper function to generate smarter alternative URLs (for Point 3 from previous, now Point 2) ---
-const getSmartAlternativeUrl = (alternative: AlternativeProduct, productTitle?: string): string => {
-  let baseUrl = ensureProtocol(alternative.url) || '';
-  const originalProductKeywords = productTitle 
-    ? productTitle
-        .toLowerCase()
-        .replace(/[^a-z0-9\s]/g, "") // Remove non-alphanumeric chars except spaces
-        .trim()
-        .split(/\s+/)
-        .filter(word => word.length > 2) // Keep words longer than 2 chars
-        .slice(0, 3) // Take first 3 significant keywords
-    : [];
-  const categoryQuery = originalProductKeywords.join('+');
-  const categoryQuerySpaced = originalProductKeywords.join(' ');
-
-  if (alternative.type === 'second-hand' && categoryQuery) {
-    const domain = (() => {
-      try {
-        return new URL(baseUrl).hostname.toLowerCase();
-      } catch {
-        // If baseUrl is not a valid URL (e.g., just a brand name), try to match brand name
-        const altBrandLower = alternative.brand.toLowerCase();
-        if (altBrandLower.includes('thredup')) return 'www.thredup.com';
-        if (altBrandLower.includes('depop')) return 'www.depop.com';
-        if (altBrandLower.includes('poshmark')) return 'poshmark.com';
-        return ''; // No match
-      }
-    })();
-
-    if (domain.includes('thredup.com')) {
-      return `https://www.thredup.com/resale/shop?search_opts[keyword]=${categoryQuery}&sizing_id=750%2C755%2C756%2C762%2C768&department_tags=womens`; // Added some common filters for better results
-    }
-    if (domain.includes('depop.com')) {
-      return `https://www.depop.com/search/?q=${categoryQuerySpaced}`; // Depop seems to handle spaces well in q
-    }
-    if (domain.includes('poshmark.com')) {
-      return `https://poshmark.com/search?query=${categoryQuerySpaced}&type=listings&src=dir`; // Poshmark specific
-    }
-    if (domain.includes('ebay.com')) {
-      return `https://www.ebay.com/sch/i.html?_nkw=${categoryQuerySpaced}+clothing&LH_ItemCondition=4`; // Condition for pre-owned
-    }
-    // Fallback for other second-hand sites or if domain not matched, but we have keywords
-    // This is a generic guess; many sites won't support this query structure.
-    // However, it's better than a potentially dead direct link.
-    console.warn(`[Popup] Unknown second-hand domain: ${domain} for brand ${alternative.brand}. Attempting generic search URL construction.`);
-    return `${baseUrl.split('/').slice(0,3).join('/')}/s?k=${categoryQuery}`; // Generic guess: /s?k= or /search?q=
-  }
-
-  // Original logic for non-second-hand or if categoryQuery couldn't be formed
-  const genericDomains = ['tentree.com', 'patagonia.com', 'everlane.com', 'wearpact.com'];
-  let isLikelyGenericHomepage = baseUrl.split('/').length <= 3; 
-  if (!isLikelyGenericHomepage) {
-    try {
-        const parsedUrl = new URL(baseUrl);
-        isLikelyGenericHomepage = genericDomains.some(domain => parsedUrl.hostname.includes(domain)) && 
-                                  (parsedUrl.pathname === '/' || parsedUrl.pathname === '');
-    } catch(e) { /* ignore malformed base URLs */ }
-  }
-
-  if (isLikelyGenericHomepage && categoryQuery) {
-    try {
-        const parsedBaseUrl = new URL(baseUrl);
-        // For sustainable brands, try common search paths if product keywords are available
-        if (parsedBaseUrl.hostname.includes('google.com')) { // Avoid messing with existing Google search links if AI returns one
-            return baseUrl;
-        }
-        return `${baseUrl}${baseUrl.endsWith('/') ? '' : '/'}search?q=${categoryQuerySpaced}`;
-    } catch (e) {
-        console.warn("[Popup] Could not parse alternative URL for search query construction:", baseUrl, e);
-        return baseUrl; 
-    }
-  }
-  return baseUrl; // Return original if it seems specific enough, is not second-hand with keywords, or if errors occurred
+const getSmartAlternativeUrl = (alternative: AlternativeProduct): string => {
+  return ensureProtocol(alternative.url) || '';
 };
 
 const App: React.FC = () => {
@@ -203,38 +133,34 @@ const App: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       console.log("[Popup] fetchData started.");
+      setLoading(true);
       try {
         const result = await chrome.storage.local.get("viridisLast");
-        console.log("[Popup] Raw result from chrome.storage.local.get:", JSON.parse(JSON.stringify(result))); // Deep copy for reliable logging
-        console.log("[Popup] Raw viridisLast from storage:", JSON.parse(JSON.stringify(result.viridisLast))); // Deep copy
 
-        if (result.viridisLast && Object.keys(result.viridisLast).length > 0) {
+        if (result && result.viridisLast && typeof result.viridisLast === 'object') {
           const fetchedData = result.viridisLast as ViridisData;
-          console.log("[Popup] Fetched data that will be set to state:", JSON.parse(JSON.stringify(fetchedData)));
           setData(fetchedData);
-          console.log("[Popup] Breakdown from fetchedData immediately after potential setData:", JSON.parse(JSON.stringify(fetchedData.breakdown)));
           
+          // Check for an error message within the successfully fetched data
           if (fetchedData.error) {
-            console.log("[Popup] Error found in fetchedData.error:", fetchedData.error);
             setError(fetchedData.error);
-          } else if (fetchedData.breakdown && fetchedData.breakdown.Error && typeof fetchedData.breakdown.Error === 'string') {
-            console.log("[Popup] Error found in fetchedData.breakdown:", fetchedData.breakdown.Error);
+          } else if (fetchedData.breakdown?.Error) {
             setError(fetchedData.breakdown.Error);
           } else {
-            setError(null); // Clear any previous error if data is fine
+            setError(null);
           }
         } else {
-          console.log("[Popup] No viridisLast data found in storage or it was empty. result.viridisLast:", result.viridisLast);
-          setError("No product data currently available.");
-          setData(null); // Ensure data is null if nothing is found
+          // This case handles when no data has been stored yet.
+          setError("No product data has been analyzed yet. Navigate to a product page to get started.");
+          setData(null);
         }
       } catch (err: any) {
-        console.error("[Popup] Failed to fetch data from storage:", err);
+        console.error("[Popup] Failed to fetch or process data from storage:", err);
         setError(`Failed to load data: ${err.message || String(err)}`);
-        setData(null); // Ensure data is null on error
+        setData(null);
       } finally {
         setLoading(false);
-        console.log("[Popup] fetchData finished. Loading set to false.");
+        console.log("[Popup] fetchData finished.");
       }
     };
 
@@ -465,7 +391,7 @@ const App: React.FC = () => {
                 </h3>
                 <div className="space-y-2.5">
                   {data.alternatives.map((alt: AlternativeProduct, index: number) => {
-                    const smartUrl = getSmartAlternativeUrl(alt, data.product?.title);
+                    const smartUrl = getSmartAlternativeUrl(alt);
                     const isLinkValid = isValidUrl(smartUrl); 
                     const Icon = alt.type === 'sustainable' ? ShoppingBag : Repeat;
                     return (
@@ -520,7 +446,7 @@ const App: React.FC = () => {
             </motion.button>
             <motion.button
               variants={buttonPressVariants} whileHover="hover" whileTap="tap"
-              onClick={() => chrome.tabs.create({ url: 'https://www.viridisshopping.com' })}
+              onClick={() => chrome.tabs.create({ url: 'https://www.viridisshopping.com/' })}
               className="flex items-center space-x-1.5 text-xs text-gray-500 hover:text-emerald-700 px-2.5 py-1.5 rounded-md transition-all duration-150 group"
             >
               <ExternalLink size={14} className="opacity-70 group-hover:opacity-100"/>

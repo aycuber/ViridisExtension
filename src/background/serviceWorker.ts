@@ -79,6 +79,59 @@ function ensureString(x: any): string {
   return x == null ? '' : String(x).trim();
 }
 
+async function getClothingCategory(productTitle: string, apiKey: string): Promise<string> {
+  if (!apiKey) {
+    console.warn('OpenAI API key not configured.');
+    return '';
+  }
+
+  try {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + apiKey
+      },
+      body: JSON.stringify({
+        model: "gpt-3.5-turbo",
+        messages: [
+          {
+            role: "system",
+            content: "You are an expert at categorizing clothing items. Your task is to identify the most general, single-word clothing category from a product title. Examples: hoodie, jeans, sweater. Do not include color, brand, style, or material."
+          },
+          {
+            role: "user",
+            content: `Extract the single-word clothing category from this title: "${productTitle}"`
+          }
+        ],
+        temperature: 0,
+        max_tokens: 10
+      })
+    });
+
+    if (!response.ok) {
+      const errorBody = await response.text();
+      console.error('OpenAI API error:', response.status, errorBody);
+      return '';
+    }
+
+    const data = await response.json();
+    const category = data.choices?.[0]?.message?.content.trim().toLowerCase() || '';
+    
+    // Basic validation to ensure it's a single word
+    if (category && !category.includes(' ')) {
+      return category;
+    } else {
+      console.warn('Received invalid category from OpenAI:', category);
+      return '';
+    }
+
+  } catch (error) {
+    console.error('Error fetching clothing category:', error);
+    return '';
+  }
+}
+
 /* ----------  Deep analysis via OpenAI ---------- */
 async function analyzeSustainability(product: ProductInfo): Promise<ViridisStorageData> {
   try {
@@ -112,15 +165,31 @@ async function analyzeSustainability(product: ProductInfo): Promise<ViridisStora
 ${productInfoForPrompt}
 `;
 
+    const category = await getClothingCategory(product.title, OPENAI_API_KEY);
+
+    const alternatives: AlternativeProduct[] = [];
+    if (category) {
+        alternatives.push({
+            brand: 'Patagonia',
+            url: `https://www.patagonia.com/search/?q=${category}`,
+            type: 'sustainable',
+            note: 'High-quality, sustainable outdoor and everyday apparel.'
+        });
+        alternatives.push({
+            brand: 'Poshmark',
+            url: `https://poshmark.com/search?query=${category}`,
+            type: 'second-hand',
+            note: 'A large marketplace for new and used clothing.'
+        });
+    }
+
     const instructionBlock = `
 Using ONLY the Reference Documents above, analyze THIS SPECIFIC PRODUCT's sustainability based on the Product Information provided.
 Return exactly one JSON object with these keys:
   • "score": integer 0–100 (this score MUST be based on your analysis of the specific Product Information above and the Reference Documents. Do NOT return a generic or default score. The score must reflect the actual sustainability aspects of THIS product.)
   • "breakdown": an object where each key is a short identifier (e.g., "material_sourcing", "water_usage") and each value is a single STRING. For example: { "material_sourcing": "Full description with data point for THIS PRODUCT and [Source Name: URL]", "water_usage": "Another full description with data for THIS PRODUCT and [Source Name: URL]" }. The value string must include a numeric data point relevant to THIS PRODUCT and a citation in the format "[Source Name: URL]" (URL must exactly match one of the Reference URLs above).
-  • "alternatives": array of two product suggestions, each an object with 
-      { "brand":string, "url":string (this should be a direct link to a product page for an item similar in category to '${ensureString(product.title)}', or a relevant category search page on the brand's site), "price_estimate":string, "type":"sustainable"|"second-hand", "note":string }.
-
-Output ONLY that JSON object—no extra text or markdown.
+  
+Do not include an "alternatives" key in your response. Output ONLY that JSON object—no extra text or markdown.
 `;
 
     const userPrompt = referenceBlock + "\n" + productInfoString + "\n" + instructionBlock;
@@ -151,7 +220,7 @@ Output ONLY that JSON object—no extra text or markdown.
     const data = await response.json();
     const rawContent = data.choices?.[0]?.message?.content;
 
-    let parsed: { score: number; breakdown: Record<string, any>; alternatives: any[]; };
+    let parsed: { score: number; breakdown: Record<string, any>; };
 
     try {
       if (!rawContent) throw new Error("No content in AI response");
@@ -200,20 +269,11 @@ Output ONLY that JSON object—no extra text or markdown.
         }
     }
 
-
-    const cleanedAlternatives = Array.isArray(parsed.alternatives) ? parsed.alternatives.map(alt => ({
-        brand: ensureString(alt.brand),
-        url: ensureString(alt.url),
-        price_estimate: alt.price_estimate ? ensureString(alt.price_estimate) : undefined,
-        type: (alt.type === 'sustainable' || alt.type === 'second-hand') ? alt.type : 'sustainable', // Default or validate
-        note: alt.note ? ensureString(alt.note) : undefined,
-    })) : [];
-
     return {
       product, // Use the original product info passed to the function
       score: typeof parsed.score === 'number' ? parsed.score : 0,
       breakdown: cleanedBreakdown,
-      alternatives: cleanedAlternatives,
+      alternatives: alternatives, // Use the dynamically generated alternatives
       timestamp: Date.now()
     };
 
