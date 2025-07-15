@@ -1,0 +1,353 @@
+[
+    {
+      "material": "Cotton fabric",
+      "Carbon footprint": "High CO₂: cotton cultivation and processing drive ≈2.6 % of global water withdrawals and require energy-intensive cultivation, ginning and finishing",
+      "endOfLife": "Most post-consumer cotton ends up exported or incinerated; only ≈1 % is closed-loop-recycled in Europe",
+      "sourcing": "Plant-based, but pesticide- and land-intensive; switch to hemp/flax suggested",
+      "waterUse": "Very water-thirsty: the fibre is singled-out as “highest water use compared with other materials”",
+      "score": 40,
+      "citation": "Mapping Textile Waste Flows Towards Its Potential for Recycling. Ponnet, 2024."
+    },
+    {
+      "material": "Polyester fabric",
+      "Carbon footprint": "Large fossil-carbon footprint (> 100 MJ kg-¹ virgin production) and responsible for micro-plastic shed during washing",
+      "endOfLife": "Only 1 % of garments are remade into new ones; most flow is exported, incinerated or used for energy recovery",
+      "sourcing": "Petroleum-derived, though bottle-to-fibre recycling is rising (~15 % of PET fibre)",
+      "waterUse": "Lower process-water demand than cotton",
+      "score": 30,
+      "citation": "Mapping Textile Waste Flows Towards Its Potential for Recycling. Ponnet, 2024."
+    },
+    {
+      "material": "Viscose / Rayon fabric",
+      "Carbon footprint": "Moderate CO₂ (lower than polyester if pulp is sustainably sourced)",
+      "endOfLife": "Same linear fate as other fibres; chemical recycling routes are still niche",
+      "sourcing": "Wood-pulp feedstock is renewable but “unsustainably sourced” in many supply chains; new fast-growing crops & closed-loop solvents recommended",
+      "waterUse": "Process water significant (dissolving & washing) yet below cotton; improvement relies on solvent recovery",
+      "score": 55,
+      "citation": "Mapping Textile Waste Flows Towards Its Potential for Recycling. Ponnet, 2024."
+    },
+    {
+      "material": "Wool fabric",
+      "Carbon footprint": "Not quantified in detail, but table flags biodegradable, flame-retardant fibre; environmental pressure comes from land & methane",
+      "endOfLife": "Shares the same low-recycling, high-export/incineration profile of Belgian waste streams",
+      "sourcing": "Animal fibre; extensive land requirement but low agro-chemical input",
+      "waterUse": "Water use lower than cotton, higher than synthetics (scouring)",
+      "score": 50,
+      "citation": "Mapping Textile Waste Flows Towards Its Potential for Recycling. Ponnet, 2024."
+    },
+    {
+      "material": "Leather fabric",
+      "Carbon footprint": "High process-energy emissions: cradle-to-gate LCAs of finished bovine leather flag tanning and finishing as the dominant global-warming hotspots",
+      "endOfLife": "Still largely linear—most post-consumer leather is land-filled or incinerated; studies urge a shift to recycling to recover embedded resources",
+      "sourcing": "Bovine hides are slaughter-house by-products, yet traceability (animal welfare, farm origin) is a growing concern as production migrates to emerging economies",
+      "waterUse": "Beamhouse operations and chrome tanning drive a substantial water footprint; Mexican case studies single them out as the main water consumers",
+      "score": 35,
+      "citation": "Life Cycle Assessment and Leather Production. Navarro et al., 2020."
+    },
+    {
+      "material": "Silk fabric",
+      "Carbon footprint": "High-mid range: cradle-to-gate averages around 25 kg CO₂-eq kg-¹ of garment because of the energy used to rear silkworms, boil cocoons and spin filament",
+      "endOfLife": "100 % biodegradable but little is actually composted; garments mostly incinerated or land-filled like other apparel",
+      "sourcing": "Mulberry sericulture in China & India; land is chemical-light but requires large amounts of fuelwood/steam for reeling",
+      "waterUse": "Processing water moderate, well below cotton",
+      "score": 55,
+      "citation": "Carbon Footprints in the Textile Industry. Peters et al., 2015."
+    },
+    {
+      "material": "Flax (linen) fabric",
+      "Carbon footprint": "Lower than most naturals: ≈15 kg CO₂-eq kg-¹ due to mechanical fibre retting & low-input farming",
+      "endOfLife": "Readily biodegradable; EU studies show > 80 % post-consumer linen still goes to landfill/incineration; mechanical recycling feasible but niche",
+      "sourcing": "European rain-fed flax; little agro-chemical input; straw coproduct for bio-energy adds circular value",
+      "waterUse": "Very low irrigation; scutching & wet-spinning use < 20 % of cotton’s process water",
+      "score": 65,
+      "citation": "Carbon Footprints in the Textile Industry. Peters et al., 2015."
+    },
+    {
+      "material": "Acrylic fabric",
+      "Carbon footprint": "Cradle-to-gate among the highest for textiles (≈ 35-38 kg CO₂-eq kg-¹) because of fossil-based acrylonitrile & solvent-intensive wet-spinning",
+      "endOfLife": "Thermoplastic, seldom recycled; most garments incinerated for energy recovery (high calorific value)",
+      "sourcing": "Petroleum feedstock via propylene–acrylonitrile route; relies on ammonia & HCN—tightening regulations raise supply-chain risk",
+      "waterUse": "Minimal process water; no field phase",
+      "score": 25,
+      "citation": "Carbon Footprints in the Textile Industry. Peters et al., 2015."
+    },
+    {
+      "material": "Nylon fabric/Polyamide",
+      "Carbon footprint": "Mid-high: ≈ 24 kg CO₂-eq kg-¹ (PA 6) with key hotspots in caprolactam production & energy-hungry melt-spinning",
+      "endOfLife": "Chemical recycling (e.g., Aquafil) is scaling but still < 5 %; bulk of apparel nylon is land-filled or incinerated",
+      "sourcing": "Petrochemical feedstock; emerging bio-adipic acid could cut upstream GHGs",
+      "waterUse": "Low water demand throughout synthetic route",
+      "score": 45,
+      "citation": "Carbon Footprints in the Textile Industry. Peters et al., 2015."
+    },
+    {
+      "material": "Polypropylene (PP) fabric",
+      "Carbon footprint": "Lowest fossil synthetics assessed: ≈ 15 kg CO₂-eq kg-¹ woven PP",
+      "endOfLife": "Easily melt-recyclable and widely collected in industrial streams; consumer textile recycling still rare",
+      "sourcing": "Derived from propylene (steam-cracker by-product); high global oversupply keeps prices & impact down",
+      "waterUse": "Negligible process water",
+      "score": 50,
+      "citation": "Carbon Footprints in the Textile Industry. Peters et al., 2015."
+    },
+    {
+      "material": "Polyurethane (PU) fabric / coating",
+      "Carbon footprint": "Around 20 kg CO₂-eq kg-¹ for garments—polyol & isocyanate synthesis are energy-intensive and release N₂O",
+      "endOfLife": "Cannot be mechanically recycled; landfill & incineration dominate; R&D on chemolysis still pilot-scale",
+      "sourcing": "Oil-based polyols & MDI/TDI; increasingly sourced from Asia; bio-based PU (< 10 %) emerging but marginal",
+      "waterUse": "Very low direct water use; solvent/DMF clean-up drives EHS risk rather than water footprint",
+      "score": 35,
+      "citation": "Carbon Footprints in the Textile Industry. Peters et al., 2015."
+    },
+    {
+      "material": "Recycled wool fabric (MWool®)",
+      "Carbon footprint": "Full LCA shows 0.63 kg CO₂-eq kg⁻¹ on average (0.10–0.90 kg range depending on waste stream and treatment), ~60 % lower than virgin wool and even in the worst case still < 1 kg CO₂-eq kg⁻¹",
+      "endOfLife": "Made entirely from pre- & post-consumer wool waste; garments can repeat the mechanical cycle several times before fibre shortening limits quality, but today most still end up land-filled/incinerated after use despite the circular potential",
+      "sourcing": "85 % post-consumer clothing from the USA/N-Europe and 15 % pre-consumer scraps; sorted in India/Pakistan, shipped to Italy, then frayed or shredded—so no new sheep farming inputs and the feedstock is classed “burden-free” waste",
+      "waterUse": "Net water deprivation is 0.093 m³ kg⁻¹, a tiny fraction of virgin wool’s ~13.9 m³; 16 % of this comes from wet shredding, the rest from background electricity and transport",
+      "score": 70,
+      "citation": "Life Cycle Assessment (LCA) of MWool® Recycled Wool Fibers. Bianco et al., 2022."
+    },
+    {
+      "material": "Wool fabric — virgin (worsted/woollen)",
+      "Carbon footprint": "LCAs show a broad range: 78–97 kg CO₂-eq kg⁻¹ for fine worsted yarns and 25–30 kg CO₂-eq kg⁻¹ for coarser woollen fibers; in every case, sheep grazing dominates (≈ 89 % of GHGs)",
+      "endOfLife": "Post-consumer wool garments remain overwhelmingly linear—reuse and closed-loop recycling are niche, so landfill or incineration is typical",
+      "sourcing": "Derived from sheep raised mainly in Australia, China and New Zealand; the grazing phase drives impacts through enteric methane, land occupation and feed inputs",
+      "waterUse": "Process-water deprivation for spinning/finishing averages 13–18 m³ kg⁻¹ for worsted routes, slightly lower (~ 12 m³ kg⁻¹) for belly-wool streams",
+      "score": 45,
+      "citation": " Life Cycle Assessment (LCA) of Worsted and Woollen Processing in Wool Production. Bianco et al., 2023."
+    },
+    {
+      "material": "Recycled polyester (r-PET denim)",
+      "Carbon footprint": "100 % r-PET denim shows ≈ 3.95 kg CO₂-eq per metre (≈ 11 kg kg⁻¹ fabric)—about 20 % lower than a cotton-rich reference and 30 % below virgin PET denim; most gains come from avoiding virgin resin production",
+      "endOfLife": "Garments still largely land-filled/incinerated, yet feedstock already came from post-consumer bottles, so closed-loop potential is higher if textile-to-textile recycling scales",
+      "sourcing": "Feedstock = shredded PET drink bottles collected, washed and re-melt-spun in Turkey; eliminates upstream oil use but adds long-haul transport burdens if bottles are imported",
+      "waterUse": "Factory-gate water demand 0.062 m³ m⁻¹ fabric, ≈ 55 % lower than cotton reference and 60 % below virgin PET denim",
+      "score": 50,
+      "citation": "Sustainability assessment of denim fabric made of PET fiber and recycled fiber from postconsumer PET bottles using LCA and LCC approach with the EDAS method. Fidan et al., 2024."
+    },
+    {
+      "material": "Polyester (virgin PET denim)",
+      "Carbon footprint": "Virgin-PET denim scores ≈ 5.62 kg CO₂-eq m⁻¹ (≈ 15 kg kg⁻¹)—~ 15 % higher than cotton-rich baseline and 42 % higher than r-PET; bottle-grade resin and melt spinning dominate GHGs",
+      "endOfLife": "Textile recycling < 5 %; most garments head to landfill or energy-recovery incineration, with micro-plastic shed during use",
+      "sourcing": "Petroleum-derived ethylene/para-xylene → PTA/EG → PET chips; energy-intensive polymerisation and filament spinning",
+      "waterUse": "Water consumption 0.165 m³ m⁻¹, the highest of the three scenarios because of cooling and wash processes",
+      "score": 30,
+      "citation": "Sustainability assessment of denim fabric made of PET fiber and recycled fiber from postconsumer PET bottles using LCA and LCC approach with the EDAS method. Fidan et al., 2024."
+    },
+    {
+      "material": "Cotton fabric (denim, 85 % cotton / 15 % PET)",
+      "Carbon footprint": "4.88 kg CO₂-eq m⁻¹ (≈ 13 kg kg⁻¹); cultivation (diesel, N-fertiliser) and rope-dyeing steam drive emissions",
+      "endOfLife": "Only ~ 1 % enters closed-loop fibre recycling; biodegrades if composted but most ends in landfill/incineration",
+      "sourcing": "Field-grown (Turkey), high fertiliser & pesticide inputs; relies on irrigation where rainfall is insufficient",
+      "waterUse": "0.139 m³ m⁻¹—more than double r-PET and 16 % below virgin PET; driven by crop irrigation and wet processing",
+      "score": 40,
+      "citation": "Sustainability assessment of denim fabric made of PET fiber and recycled fiber from postconsumer PET bottles using LCA and LCC approach with the EDAS method. Fidan et al., 2024."
+    },
+    {
+      "material": "Glass fiber fabric",
+      "Carbon footprint": "LCAs of glass-fiber/epoxy parts show the fiber itself contributes ~ 28 % of composite GWP; at a typical 5 kg CO₂-eq kg⁻¹ composite this scales to ≈ 1–2 kg CO₂-eq kg⁻¹ glass fiber (≈ 40/100)",
+      "endOfLife": "Thermoset glass-fiber composites are “difficult to recycle and may be a potential landfill problem,” so most post-consumer waste is still land-filled or incinerated (≈ 30/100)",
+      "sourcing": "Made from abundant silica sand, but melting at > 1600 °C is highly energy-intensive; however, no farmland, irrigation or agro-chemicals are required (≈ 50/100)",
+      "waterUse": "The melt-spinning process is essentially dry; water demand is limited to closed-loop cooling systems, giving a smaller water footprint than most natural fibers (< 0.05 m³ kg⁻¹, ≈ 60/100)",
+      "score": 45,
+      "citation": "LCA of fibre-reinforced composites, Cicala & Lo Faro, 2015"
+    },
+    {
+      "material": "Aramid fabric (meta-aramid / Nomex®)",
+      "Carbon footprint": "• Fibre = 3.3 kg CO₂-eq kg⁻¹ • Fabric = 8.3 kg CO₂-eq kg⁻¹ • Full FR coverall ≈ 58 kg CO₂-eq (lower than cotton, ≈ = modacrylic)",
+      "endOfLife": "Non-biodegradable; garments typically land-filled or incinerated, adding another ≈ 58 kg CO₂-eq and leaving persistent micro-plastic residues",
+      "sourcing": "Fully synthetic; polymerised from petro-chemical monomers (meta-phenylenediamine + isophthaloyl chloride) in solvent-intensive spinning—wholly fossil-based, energy-intensive processes",
+      "waterUse": "Process-water mostly from wet-finishing; generic textile average ~ 164 L kg⁻¹—well below cotton but still significant for wastewater treatment",
+      "score": 55,
+      "citation": "Life Cycle Assessment of Flame-Resistant Textiles Used in the Production of Occupational Safety Clothing: A Focus on the Personal Protective Equipment Industry. Ikimi, 2024."
+    },
+    {
+      "material": "Jute fiber fabric",
+      "Carbon footprint": "Very low cradle-to-gate CO₂: field phase ≈ 0.15 kg CO₂-eq kg⁻¹ and yarn production ≈ 1.4 kg CO₂-eq kg⁻¹—lowest of the six fibres studied",
+      "endOfLife": "Biodegradable bast fibre, but > 70 % of jute textiles still end up land-filled or incinerated; true closed-loop recycling remains niche",
+      "sourcing": "Rain-fed crop grown mainly in India/Bangladesh; minimal fertiliser and pesticide inputs, giving the best fossil-resource-scarcity score among fibres",
+      "waterUse": "Tiny footprint: cultivation uses just 0.057 m³ kg⁻¹ and the full spinning route totals ≈ 0.27 m³ kg⁻¹—an order of magnitude below cotton",
+      "score": 60,
+      "citation": "Evaluating Environmental Impact of Natural and Synthetic fibers: A Life Cycle Assessment Approach. Gonzalez et al., 2023."
+    },
+    {
+      "material": "Cotton fabric (100 % CO)",
+      "Carbon footprint": "Fibre production emits ≈ 4.7 kg CO₂-eq kg⁻¹ (net ≈ 3 kg after photosynthetic uptake) and needs 59.8 MJ kg⁻¹—about 40 % less energy than polyester, yet hotel sheets still demand more energy overall because two cotton sheets are needed to match the lifetime of one CO/PES sheet",
+      "endOfLife": "Biodegradable, but most garments are still land-filled or incinerated; landfill decomposition creates CH₄/CO₂, while incineration can reclaim ~ 20 MJ kg⁻¹ heat",
+      "sourcing": "Field crop grown largely in water-scarce regions; irrigation 7 – 29 m³ kg⁻¹ fibre and high agro-chemical inputs (≈ 457 g fertiliser, 16 g pesticide kg⁻¹) raise ecotoxicity concerns",
+      "waterUse": "Very water-intensive: cultivation and processing together consume ≈ 22 000 – 52 000 L kg⁻¹ fibre, > 99 % of which is on-farm irrigation",
+      "score": 40,
+      "citation": "Life Cycle Assessment: Environmental Profile of Cotton and Polyester Cotton Fabrics. Kalliala & Nousiainen, 1999."
+    },
+    {
+      "material": "Polyester–Wool blended fabric (“Tricia”, ≈ 55 % PET / 45 % wool)",
+      "Carbon footprint": "ISO-14067 LCA gives 6.0 t CO₂-eq for 3 500 m, i.e. 1.72 kg CO₂-eq m⁻¹ (≈ 4.8 kg CO₂-eq kg⁻¹ assuming 360 g m⁻²) cradle-to-gate",
+      "endOfLife": "Fibre-blend makes mechanical/chemical separation uneconomic; most garments are still land-filled or incinerated, with only niche open-loop routes available",
+      "sourcing": "~ 45 % sheep wool (enteric-methane, pasture land) + ~ 55 % virgin PET from fossil oil; high-temperature melt-spinning and farm emissions dominate impacts",
+      "waterUse": "Facility relies on on-site wells; dye-finishing is water-intensive but volumes not reported—typical textile wet-processing uses ≈ 45 – 200 L kg⁻¹ cloth, suggesting a lower footprint than cotton but higher than synthetic-only fabrics",
+      "score": 48,
+      "citation": "A Life Cycle Analysis of a Polyester–Wool Blended Fabric and Associated Carbon Emissions in the Textile Industry. Tekin et al., 2024."
+    },
+    {
+      "material": "Polyester fabric (PET)",
+      "Carbon footprint": "Cradle-to-gate ≈ 21 kg CO₂-eq kg⁻¹ for typical garments (e.g., 2.55 kg CO₂-eq for a 130 g T-shirt) and ≈ 10 kg CO₂-eq cradle-to-grave for a 0.48 kg dress; in a detailed LCA of a 100 % knit blouse, consumer laundering drives 82 % of life-cycle energy (1.6 GJ per 10⁶ wearings)",
+      "endOfLife": "Non-biodegradable; most post-consumer items landfilled or incinerated (39 % of life-cycle solid-waste volume comes at the disposal stage). Mechanical (rPET) and emerging chemical recycling can recapture fibre value, but current capture rates remain low",
+      "sourcing": "Virgin PET is made from petroleum/natural-gas aromatics, requiring ~ 97 MJ kg⁻¹ of primary energy and < 3 kg non-renewable feedstocks; recycled PET (bottle or textile) can cut these inputs by ~ 30-50 %",
+      "waterUse": "Production water demand is very low (~ 17 L kg⁻¹ fibre vs > 20 000 L kg⁻¹ cotton) , but user washing dominates the life-cycle, accounting for 44-60 % of total garment water consumption",
+      "score": 45,
+      "citation": "Prospective Environmental Life Cycle Asssessment of Nanosilver T-shirts, Walser et al. 2011 and  Life Cycle Analysis of a Polyester Garment. Smith & Barker, 1995."
+    },
+    {
+      "material": "Cotton fabric",
+      "Carbon footprint": "Base fibre ≈ 3.5 kg CO₂-eq kg⁻¹; spinning (70 dtex) + weaving together add a further ~ 9 kg, making cotton the highest-impact fibre in the study",
+      "endOfLife": "In Western Europe ~ 67 % of garments are energy-recovery-incinerated, 33 % collected for reuse/down-cycling; cotton receives a small CO₂ credit when burnt because the carbon is biogenic",
+      "sourcing": "Cultivation data modelled for Chinese farms (“cotton fibres, ginned, at farm/CN”)",
+      "waterUse": "Wet-processing steps for cotton (desizing, scouring, etc.) can consume 200 – 450 L kg⁻¹ fabric, and this omits on-farm irrigation, so overall water pressure is the highest among fibres considered",
+      "score": 35,
+      "citation": "LCA Benchmarking Study on Textiles made of Cotton,Polyester, Nylon, Acryl, or Elastane. van der Velden et al., 2014."
+    },
+    {
+      "material": "Polyester (PET) fabric",
+      "Carbon footprint": "Virgin pellets ≈ 2.7 kg CO₂-eq kg⁻¹; even after extrusion and weaving it remains one of the lower-impact options among synthetics",
+      "endOfLife": "Same disposal profile as other synthetics; today most PET textiles are incinerated or land-filled, with only niche mechanical/chemical recycling",
+      "sourcing": "Modelled as “polyethylene terephthalate, amorphous granulate, at plant/RER” — fossil feedstock, European production",
+      "waterUse": "Study focuses on energy, not water, but typical dyeing/finishing for synthetics falls in the 45 – 200 L kg⁻¹ range, far below cotton and with no field irrigation",
+      "score": 55,
+      "citation": "LCA Benchmarking Study on Textiles made of Cotton,Polyester, Nylon, Acryl, or Elastane. van der Velden et al., 2014."
+    },
+    {
+      "material": "Nylon fabric (PA 6/66)",
+      "Carbon footprint": "Highest of the five polymers assessed: ≈ 8.6 kg CO₂-eq kg⁻¹ polymer pellets; nylon woven at 70 dtex ranks just behind cotton in overall burden",
+      "endOfLife": "Non-biodegradable; majority incinerated/land-filled, limited fibre-to-fibre recycling; no heat-recovery credit like cotton",
+      "sourcing": "Blend of 50 % PA 6 and 50 % PA 66 produced at European plants (RER)",
+      "waterUse": "Water in mill processing similar to PET (≈ 45 – 200 L kg⁻¹); no agricultural irrigation",
+      "score": 30,
+      "citation": "LCA Benchmarking Study on Textiles made of Cotton,Polyester, Nylon, Acryl, or Elastane. van der Velden et al., 2014."
+    },
+    {
+      "material": "Elastane/Spandex fabric",
+      "Carbon footprint": "Polyurethane fibre ≈ 4.8 kg CO₂-eq kg⁻¹ (mid-range); when blended, it raises the impact of fabrics relative to PET but below nylon",
+      "endOfLife": "Adds stretch but complicates recycling; garments follow the same linear path (incineration > land-fill)",
+      "sourcing": "“Polyurethane, flexible foam, at plant/RER” — entirely fossil-based synthesis",
+      "waterUse": "Process-water loads align with other synthetics (≈ 45 – 200 L kg⁻¹); no cultivation phase",
+      "score": 45,
+      "citation": "LCA Benchmarking Study on Textiles made of Cotton,Polyester, Nylon, Acryl, or Elastane. van der Velden et al., 2014."
+    },
+    {
+      "material": "Recycled viscose fabric (viscose-to-viscose)",
+      "Carbon footprint": "No CO₂ figure given; process innovations cut carbon-disulfide use by 30.5 % and remove bleaching/ageing, signalling a lower cradle-to-gate impact than conventional viscose",
+      "endOfLife": "Establishes a genuine fibre-to-fibre loop by turning pre-consumer viscose waste into new staple; final garments can still be land-filled or incinerated if textile-to-textile collection is lacking",
+      "sourcing": "Feedstock is 100 % pre-consumer undyed viscose off-cuts—avoids virgin wood pulp and the forestry footprint, relying mainly on mechanical defibration plus double-steeping chemistry",
+      "waterUse": "Study lists multiple closed-loop washes (e.g., H₂SO₄ 18 g L⁻¹ at 90 °C) but does not quantify total m³ kg⁻¹; elimination of irrigation (wood-growing) and fewer chemical baths suggests a moderate footprint",
+      "score": 60,
+      "citation": "Towards Sustainable Viscose-to-Viscose Production: Strategiesfor Recycling of Viscose Fibres. Forsberg et al., 2024."
+    },
+    {
+      "material": "Hemp fiber fabric",
+      "Carbon footprint": "14.6 kg CO₂-eq cradle-to-gate (average hemp yarn)",
+      "endOfLife": "100 % cellulose → readily biodegradable or mechanically recyclable into staple fibre. Industrial composting or fibre-to-fibre recycling feasible; no hazardous residues.",
+      "sourcing": "Annual bast crop; grows quickly with little or no synthetic fertilizer/pesticides and can be cultivated on marginal land.",
+      "waterUse": "Requires far less irrigation than cotton; typical yields 1–5 t ha⁻¹ with minimal water inputs",
+      "score": 68,
+      "citation": "Systematic Insights into a Textile Industry: Reviewing Life Cycle Assessment and Eco-Design. Fonseca et al., 2023."
+    },
+    {
+      "material": "Modal fabric",
+      "Carbon footprint": "30.1 kg CO₂-eq cradle-to-grave (average modal garment)",
+      "endOfLife": "Cellulosic fibre is biodegradable and can be chemically recycled back to dissolving pulp; incineration with energy recovery common where composting not available.",
+      "sourcing": "Sourced from sustainably managed beech forests; solvent-spinning (viscose-type) process in closed loops recovers > 99 % of chemicals.",
+      "waterUse": "Closed-loop spinning uses ~ 50 % less water than conventional viscose; far lower field irrigation than cotton (forest-based).",
+      "score": 60,
+      "citation": "Systematic Insights into a Textile Industry: Reviewing Life Cycle Assessment and Eco-Design. Fonseca et al., 2023."
+    },
+    {
+      "material": "Recycled cotton T-shirt fabric",
+      "Carbon footprint": "Mechanical closed-loop route for a 178 g T-shirt: 3.43 kg CO₂-eq per life-cycle, 13 % lower than the virgin/linear counterpart (3.56 kg)",
+      "endOfLife": "60 % of worn shirts are separately collected; mechanical shredding recovers 27 % of the original fibre, the rest is still land-filled / incinerated",
+      "sourcing": "Feedstock = post-consumer cotton from Norway, shredded in Lithuania, respun in China—so ≈ 27 % less virgin cotton and farm inputs than the linear system",
+      "waterUse": "Total cradle-to-grave water demand 1.28 m³ per shirt, 13 % below the linear cotton route (1.47 m³) because no new irrigation is needed for the recovered portion",
+      "score": 60,
+      "citation": "Sustainable Clothing Systems: A Comparative Life Cycle Assessment of T-Shirts Made from Primary and Recycled Materials. Ahmed, 2024."
+    },
+    {
+      "material": "Recycled polyester T-shirt fabric",
+      "Carbon footprint": "Chemical depolymerisation + re-granulation gives ≈ 6.66 kg CO₂-eq per shirt, only 0.5 % lower than the virgin route (6.69 kg) because virgin PET accounts for < 15 % of total impact",
+      "endOfLife": "29 % of PET is recovered as DMT / EG and re-used; extra transport, sorting and chemistry offset much of the benefit, so most garments still end up in energy-recovery incineration",
+      "sourcing": "46 g of recycled PET chips displace virgin granulate; balance (71 %) remains fossil-based. Feedstock bottles/textiles are chemically split, re-polymerised and spun in China",
+      "waterUse": "Water footprint unchanged at ≈ 0.06 m³ per shirt (wet processing + use phase dominate)",
+      "score": 48,
+      "citation": "Sustainable Clothing Systems: A Comparative Life Cycle Assessment of T-Shirts Made from Primary and Recycled Materials. Ahmed, 2024."
+    },
+    {
+      "material": "Kenaf fiber fabric",
+      "Carbon footprint": "≈ 0.55 kg CO₂-eq kg⁻¹ cradle-to-gate—about 80 % lower than PP fabric and one-fifth that of cotton; main hotspots are field diesel and baling electricity",
+      "endOfLife": "100 % lignocellulosic → compostable or mechanically recycled to staple; today most kenaf textiles still end up land-filled or incinerated, though no toxic residues form",
+      "sourcing": "Bast fiber from Hibiscus cannabinus grown in India/Bangladesh; rain-fed, minimal pesticide/fertilizer inputs; fibre often retted in the same ponds used for jute, giving a by-product use pathway",
+      "waterUse": "≈ 0.70 m³ kg⁻¹ cradle-to-gate. Field phase is largely rain-fed; water is mainly for pond-retting and mill washing—~ 10 × lower than cotton but higher than PP and glass fiber",
+      "score": 62,
+      "citation": "Comparative analysis of carbon, ecological, and water footprints of polypropylene-based composites filled with cotton, jute and kenaf fibers. Korol et al., 2020."
+    },
+    {
+      "material": "Polypropylene (PP) fabric",
+      "Carbon footprint": "Cradle-to-gate 3.43 kg CO₂-eq kg⁻¹; > 84 % of that comes from grid electricity and the propylene monomer, with CO₂ making up > 90 % of GHGs",
+      "endOfLife": "Thermoplastic and readily melt-recyclable, yet most consumer PP textiles still follow a linear path to energy-recovery incineration or landfill (the EUR-pallet case assumes no post-use recycling)",
+      "sourcing": "Derived entirely from fossil propylene; electricity plus monomer production dominate all three footprints",
+      "waterUse": "0.059 m³ kg⁻¹ (≈ 59 L) — largely cooling water tied to electricity generation; far below natural fibres but higher than glass fiber",
+      "score": 50,
+      "citation": "Comparative analysis of carbon, ecological, and water footprints of polypropylene-based composites filled with cotton, jute and kenaf fibers. Korol et al., 2020."
+    },
+    {
+      "material": "Alpaca fabric",
+      "Carbon footprint": "Extensive-grazing LCA (Peruvian Andes) reports 53 kg CO₂-eq kg⁻¹ greasy fibre (biophysical allocation); enteric-methane is 67 % of total GHGs",
+      "endOfLife": "Fully biodegradable protein fibre, but post-consumer garments are still overwhelmingly land-filled or incinerated; fibre-to-fibre recycling remains niche",
+      "sourcing": "Herders raise alpacas on high-Andean grasslands with almost no external feed, fertiliser, or energy inputs—low resource intensity but high methane intensity",
+      "waterUse": "Water footprint not quantified; system relies on natural rainfall for pasture, with no irrigation or wet-processing at farm gate—implying a very low blue-water demand",
+      "score": 50,
+      "citation": "Estimation of carbon footprint and sources of emissions of an extensive alpaca production system. Gómez Oquendo et al., 2022."
+    },
+    {
+      "material": "Acetate / Triacetate fabric",
+      "Carbon footprint": "Fabrication of 1 m² cellulose-triacetate UF membrane in France emits ≈ 11 kg CO₂-eq (IPCC 100a) – energy for solvent (NMP) production and glycerol pre-conditioning dominate",
+      "endOfLife": "Cellulose backbone is compostable once fully de-acetylated, but in practice most acetate textiles and membranes are land-filled or incinerated; fibre-to-fibre recycling is still at pilot scale",
+      "sourcing": "Wood-pulp feedstock acetylated with acetic anhydride; solvent-intensive NIPS route relies on N-methyl-2-pyrrolidone (NMP) and glycerol, so impacts hinge on certified forestry and greener solvent choices",
+      "waterUse": "Process inventory lists ≈ 144 L water m⁻² (117 kg tap + 26.6 kg softened) – orders-of-magnitude lower than cotton but higher than melt-spun synthetics",
+      "score": 45,
+      "citation": "A generic Process Modelling – LCA approach for UF Membrane Fabrication: Application to Cellulose Acetate Membranes. Prézélus et al., 2020."
+    },
+    {
+      "material": "Bio-based polyurethane (water-borne coating)",
+      "Carbon footprint": "≈ 3.5 kg CO₂-eq kg⁻¹ – about 25 % lower than fossil-PU thanks to rapeseed-oil polyol, with lower CED in 8 of 18 ReCiPe mid-point categories",
+      "endOfLife": "Cross-linked thermoset: mechanical recycling limited; typically landfilled or energy-recovered. Highly resistant to hydrolysis/UV/washing and passes ISO 15025, so unlikely to biodegrade quickly",
+      "sourcing": "~ 60 % bio-carbon from fatty-acid polyester polyol; water-borne process (no DMF); still uses petro-isocyanate & catalysts",
+      "waterUse": "No blue-water figure given; coating formulated in water carrier with minimal process water—overall demand expected low; upstream irrigation depends on oil-crop feedstock",
+      "score": 55,
+      "citation": "Bio-based waterborne PU for durable textile coatings. De Smet et al., 2021."
+    },
+    {
+      "material": "Polylactic Acid (PLA) fabric",
+      "Carbon footprint": "~ 2.8 kg CO₂-eq kg⁻¹ cradle-to-gate (conversion step alone ≈ 2.8 kg CO₂-eq kg⁻¹ and > 50 % of total; biogenic uptake ≈ 1.8 kg CO₂ kg⁻¹ can lower net impact)",
+      "endOfLife": "Industrial composting, mechanical & chemical recycling; recycling cuts GHG 0.3–1.2 × versus incineration, but infrastructure still limited",
+      "sourcing": "Renewable feedstocks (corn, sugarcane). Conversion relies heavily on fossil energy—natural gas 65 %, electricity 22 % per kg PLA",
+      "waterUse": "Review flags “water resources usage” as a significant impact but gives no figure; LCAs place process-water demand in the low-moderate range (≈ 0.05–0.10 m³ kg⁻¹, largely from agriculture & fermentation)",
+      "score": 65,
+      "citation": "The Life Cycle Assessment for Polylactic Acid (PLA) to Make it a Low-Carbon Material. Rezvani Ghomi et al., 2021."
+    },
+    {
+      "material": "Hemp yarn (water-retted)",
+      "Carbon footprint": "LCA of European warm-water retting: 1 350 kg CO₂-eq per 100 kg yarn ⇒ 13.5 kg CO₂-eq kg⁻¹",
+      "endOfLife": "Fully biodegradable; garments still mainly land-filled/incinerated; fibre-to-fibre recycling remains niche",
+      "sourcing": "Bast crop grown without pesticides in Central Europe; retting pools use naturally heated thermal water; diesel & fertiliser are minor hotspots",
+      "waterUse": "19.9 m³ per 100 kg yarn (≈ 199 L kg⁻¹) from retting + bleaching—~ 3 × flax, still < 1 % of cotton irrigation",
+      "score": 65,
+      "citation": "The Environmental Impacts of the Production of Hemp and Flax Textile Yarn. van der Werf & Turunen, 2008."
+    },
+    {
+      "material": "Flax yarn (dew-retted)",
+      "Carbon footprint": "Dew-retting scenario: 1 360 kg CO₂-eq per 100 kg yarn ⇒ 13.6 kg CO₂-eq kg⁻¹—very similar to hemp",
+      "endOfLife": "Biodegradable; higher reuse rates than hemp but most garments still incinerated/land-filled; limited closed-loop spinning",
+      "sourcing": "Western-European flax grown without irrigation; higher pesticide use than hemp but far higher long-fibre yield (≈ 62 % of stem mass)",
+      "waterUse": "7.23 m³ per 100 kg yarn (≈ 72 L kg⁻¹) — only bleaching water; no retting liquor to treat",
+      "score": 67,
+      "citation": "The Environmental Impacts of the Production of Hemp and Flax Textile Yarn. van der Werf & Turunen, 2008."
+    }
+  ]

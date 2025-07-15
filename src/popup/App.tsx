@@ -1,3 +1,4 @@
+// src/popup/App.tsx
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
@@ -31,30 +32,48 @@ interface ViridisData {
 // --- Helper function to parse breakdown string for text and source link (for Point 2) ---
 interface ParsedBreakdownDetail {
   text: string;
+  citation?: string;
   sourceName?: string;
   sourceUrl?: string;
 }
 
-const parseBreakdownStringForLink = (detailString: string): ParsedBreakdownDetail => {
-  if (typeof detailString !== 'string') {
-    return { text: "Invalid detail format" };
-  }
-  // Regex to find [Source Name: URL] at the end, capturing name and URL
-  // It allows for optional whitespace and ensures URL starts with http/https.
-  const citationRegex = /^(.*?)(?:\s*\[([A-Za-z0-9\s._-]+):\s*(https?:\/\/[^\s\]]+)\])?\s*$/s;
-  const match = detailString.match(citationRegex);
+const parseBreakdownStringForLink = (detailString: string): ParsedBreakdownDetail & { citationTitle?: string, citationRest?: string } => {
+  console.debug('[parseBreakdownStringForLink] called with:', detailString);
+  let core = detailString.trim();
+  let citation: string|undefined;
+  let sourceName: string|undefined;
+  let sourceUrl: string|undefined;
+  let citationTitle: string|undefined;
+  let citationRest: string|undefined;
 
-  if (match) {
-    const text = ensureString(match[1]); // The main text part
-    const sourceName = match[2] ? ensureString(match[2]) : undefined; 
-    const sourceUrl = match[3] ? ensureString(match[3]) : undefined;
-    
-    if (sourceName && sourceUrl && isValidUrl(sourceUrl)) {
-      return { text, sourceName, sourceUrl };
-    }
-    return { text: detailString.trim() }; // Return original if citation parts are incomplete or URL invalid
+  // 1. Extract [Source Name: URL] as before
+  const linkRegex = /^(.*?)(?:\s*\[([A-Za-z0-9\s._-]+):\s*(https?:\/\/[^\s\]]+)\])?\s*$/s;
+  const linkMatch = core.match(linkRegex);
+  if (linkMatch) {
+    core = linkMatch[1].trim();
+    sourceName = linkMatch[2] || undefined;
+    sourceUrl = linkMatch[3] || undefined;
   }
-  return { text: detailString.trim() }; // No citation found, return original text
+
+  // 2. **New**: extract your [Citation Goes Here] block
+  const citBracketRegex = /(.*?)\s*\[([^\]]+)\]\s*$/;
+  const citMatch = core.match(citBracketRegex);
+  if (citMatch) {
+    core = citMatch[1].trim();
+    citation = citMatch[2].trim();
+    // Split citation into title and rest (assume first period ends title)
+    const periodIdx = citation.indexOf('.')
+    if (periodIdx !== -1) {
+      citationTitle = citation.slice(0, periodIdx + 1).trim();
+      citationRest = citation.slice(periodIdx + 1).trim();
+    } else {
+      citationTitle = citation;
+      citationRest = '';
+    }
+  }
+  const result = { text: core, citation, sourceName, sourceUrl, citationTitle, citationRest };
+  console.debug('[parseBreakdownStringForLink] result:', result);
+  return result;
 };
 
 // Animation Variants
@@ -70,9 +89,9 @@ const sectionVariants: Variants = {
     opacity: 1,
     y: 0,
     transition: {
-      delay: i * 0.05, // 50ms stagger
+      delay: i * 0.05,
       duration: 0.4,
-      ease: [0.25, 0.1, 0.25, 1.0], // ease-out cubic/quintic like
+      ease: [0.25, 0.1, 0.25, 1.0],
     },
   }),
 };
@@ -83,17 +102,12 @@ const listItemVariants: Variants = {
     opacity: 1,
     x: 0,
     transition: {
-      delay: i * 0.05, // 50ms stagger within lists
+      delay: i * 0.05,
       duration: 0.3,
       ease: "easeOut",
     },
   }),
 };
-
-// Helper (from previous, might be needed by parseBreakdownStringForLink)
-function ensureString(x: any): string {
-  return x == null ? '' : String(x).trim();
-}
 
 // isValidUrl and ensureProtocol (from previous, needed for links)
 const isValidUrl = (urlString?: string): boolean => {
@@ -120,14 +134,12 @@ const getSmartAlternativeUrl = (alternative: AlternativeProduct): string => {
 const App: React.FC = () => {
   const [data, setData] = useState<ViridisData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isVisible, setIsVisible] = useState(true); // For controlling popup presence for exit animation
-  const [error, setError] = useState<string | null>(null); // Added error state
+  const [isVisible, setIsVisible] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Placed handleClose here as it uses setIsVisible and is called by UI
   const handleClose = () => {
     setIsVisible(false);
-    // Give time for animation before window.close might be called by Chrome
-    setTimeout(() => window.close(), 250); // Matches exit animation duration + buffer
+    setTimeout(() => window.close(), 250);
   };
 
   useEffect(() => {
@@ -136,21 +148,16 @@ const App: React.FC = () => {
       setLoading(true);
       try {
         const result = await chrome.storage.local.get("viridisLast");
+        console.debug("[Popup] Raw result:", result);
 
         if (result && result.viridisLast && typeof result.viridisLast === 'object') {
           const fetchedData = result.viridisLast as ViridisData;
           setData(fetchedData);
-          
-          // Check for an error message within the successfully fetched data
-          if (fetchedData.error) {
-            setError(fetchedData.error);
-          } else if (fetchedData.breakdown?.Error) {
-            setError(fetchedData.breakdown.Error);
-          } else {
-            setError(null);
-          }
+
+          if (fetchedData.error) setError(fetchedData.error);
+          else if (fetchedData.breakdown?.Error) setError(fetchedData.breakdown.Error);
+          else setError(null);
         } else {
-          // This case handles when no data has been stored yet.
           setError("No product data has been analyzed yet. Navigate to a product page to get started.");
           setData(null);
         }
@@ -166,50 +173,32 @@ const App: React.FC = () => {
 
     fetchData();
 
-    // Listener for real-time updates (e.g., if SW completes analysis while popup is open)
-    const messageListener = (
-      message: any, 
-      _sender: chrome.runtime.MessageSender,
-      _sendResponse: (response?: any) => void
-    ): boolean | undefined => {
+    const messageListener = (message: any): boolean | undefined => {
       console.log("[Popup] Message received type:", message.type);
       if (message.type === 'VIRIDIS_DATA_UPDATED' && message.payload) {
-        console.log("[Popup] Received VIRIDIS_DATA_UPDATED with payload:", JSON.parse(JSON.stringify(message.payload)));
         const updatedData = message.payload as ViridisData;
         setData(updatedData);
-        if (updatedData.error) {
-          console.log("[Popup] Error found in VIRIDIS_DATA_UPDATED error:", updatedData.error);
-          setError(updatedData.error);
-        } else if (updatedData.breakdown && updatedData.breakdown.Error && typeof updatedData.breakdown.Error === 'string') {
-          console.log("[Popup] Error found in VIRIDIS_DATA_UPDATED breakdown:", updatedData.breakdown.Error);
-          setError(updatedData.breakdown.Error);
-        } else {
-          setError(null);
-        }
-        return true; // Indicate message was handled
+        if (updatedData.error) setError(updatedData.error);
+        else if (updatedData.breakdown?.Error) setError(updatedData.breakdown.Error);
+        else setError(null);
+        return true;
       }
-      return undefined; // Indicate message was not handled by this listener
+      return undefined;
     };
-    chrome.runtime.onMessage.addListener(messageListener);
 
-    // Optional: Listen for Escape key to close popup
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        handleClose();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
+    chrome.runtime.onMessage.addListener(messageListener);
+    window.addEventListener('keydown', e => { if (e.key === 'Escape') handleClose(); });
 
     return () => {
       chrome.runtime.onMessage.removeListener(messageListener);
-      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keydown', () => {});
     };
   }, []);
 
-  // Log data state when it changes
   useEffect(() => {
-    console.log("[Popup] data state changed. Current data:", JSON.parse(JSON.stringify(data)));
+    console.log("[Popup] data state changed. Current data:", data);
     console.log("[Popup] data state changed. Current error state:", error);
+    if (data?.breakdown) console.debug('[Breakdown Values]', data.breakdown);
   }, [data, error]);
 
   const ScoreDisplay: React.FC<{ score: number }> = ({ score }) => {
@@ -220,10 +209,9 @@ const App: React.FC = () => {
     else { scoreColor = 'text-red-500'; ringColor = 'ring-red-400'; }
 
     return (
-      <motion.div 
+      <motion.div
         className={`relative w-36 h-36 mx-auto flex items-center justify-center rounded-full ring-4 ${ringColor} bg-white shadow-lg`}
-        initial={{ scale: 0.5, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1, transition: { delay: 0.1, duration: 0.4, type: "spring", stiffness: 100 } }}
+        initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1, transition: { delay: 0.1, duration: 0.4, type: "spring", stiffness: 100 } }}
       >
         <span className={`text-6xl font-bold ${scoreColor}`}>{score}</span>
         <span className="absolute bottom-5 text-sm text-gray-500">/100</span>
@@ -231,7 +219,6 @@ const App: React.FC = () => {
     );
   };
 
-  // Framer Motion button/link variants for hover and tap
   const interactiveVariants: Variants = {
     hover: { scale: 1.03, transition: { duration: 0.15, ease: "easeInOut" } },
     tap: { scale: 0.97, transition: { duration: 0.1, ease: "easeInOut" } },
@@ -246,7 +233,7 @@ const App: React.FC = () => {
     return (
       <div className="w-[300px] p-6 flex flex-col items-center justify-center bg-white rounded-lg shadow-xl min-h-[350px] font-[system-ui,sans-serif]">
         <motion.div initial={{ opacity:0, scale:0.8}} animate={{opacity:1, scale:1}} transition={{duration:0.3}}>
-            <Leaf className="w-12 h-12 text-emerald-500 animate-pulse mb-4" />
+          <Leaf className="w-12 h-12 text-emerald-500 animate-pulse mb-4" />
         </motion.div>
         <h2 className="text-lg font-semibold text-gray-700">Viridis</h2>
         <p className="text-gray-500 text-sm">Analyzing sustainability...</p>
@@ -254,67 +241,69 @@ const App: React.FC = () => {
     );
   }
 
-  // Handle error state from service worker
   if (error) {
     console.log("[Popup] Rendering Error state with error:", error);
     return (
-      <motion.div custom={1} variants={sectionVariants} initial="hidden" animate="visible" className="p-5 text-center w-[300px] bg-white rounded-lg shadow-xl font-[system-ui,sans-serif] text-gray-800 flex flex-col items-center justify-center min-h-[350px]">
+      <motion.div custom={1} variants={sectionVariants} initial="hidden" animate="visible"
+        className="p-5 text-center w-[300px] bg-white rounded-lg shadow-xl font-[system-ui,sans-serif] text-gray-800 flex flex-col items-center justify-center min-h-[350px]"
+      >
         <AlertCircle className="w-12 h-12 text-red-500 mb-4 mx-auto" />
         <h2 className="text-xl font-semibold text-gray-800 mb-2">Analysis Error</h2>
         <p className="text-gray-600 text-sm leading-relaxed">
           {error.replace("[No Link Available]", "").trim() || "An unexpected error occurred during analysis."}
         </p>
-        {data?.product?.title && <p className="text-xs text-gray-400 mt-3 truncate">Regarding: {data.product.title}</p>}
-      </motion.div>
-    );
-  }
-  
-  if (!data || typeof data.score !== 'number') { // Handles both no data and non-error missing score
-    console.log("[Popup] Rendering No Product Data state. Data:", JSON.parse(JSON.stringify(data)));
-    return (
-      <motion.div custom={1} variants={sectionVariants} initial="hidden" animate="visible" className="p-6 flex flex-col items-center justify-center min-h-[200px] w-[300px] bg-white rounded-lg shadow-xl font-[system-ui,sans-serif] text-gray-800">
-          <AlertCircle className="w-12 h-12 text-gray-400 mb-4" />
-          <h2 className="text-xl font-semibold text-gray-800 mb-2">No Product Data</h2>
-          <p className="text-gray-600 text-sm leading-relaxed text-center">
-            Navigate to a clothing product page. Viridis will analyze its sustainability, or previous data might be unavailable.
+        {data?.product?.title && (
+          <p className="text-xs text-gray-400 mt-3 truncate">
+            Regarding: {data.product.title}
           </p>
+        )}
       </motion.div>
     );
   }
 
-  console.log("[Popup] Rendering Main Content. Data:", JSON.parse(JSON.stringify(data)));
+  if (!data || typeof data.score !== 'number') {
+    console.log("[Popup] Rendering No Product Data state.");
+    return (
+      <motion.div custom={1} variants={sectionVariants} initial="hidden" animate="visible"
+        className="p-6 flex flex-col items-center justify-center min-h-[200px] w-[300px] bg-white rounded-lg shadow-xl font-[system-ui,sans-serif] text-gray-800"
+      >
+        <AlertCircle className="w-12 h-12 text-gray-400 mb-4" />
+        <h2 className="text-xl font-semibold text-gray-800 mb-2">No Product Data</h2>
+        <p className="text-gray-600 text-sm leading-relaxed text-center">
+          Navigate to a clothing product page. Viridis will analyze its sustainability, or previous data might be unavailable.
+        </p>
+      </motion.div>
+    );
+  }
+
+  console.log("[Popup] Rendering Main Content. Data:", data);
   return (
     <AnimatePresence mode="wait">
       {isVisible && (
         <motion.div
           className="w-[300px] bg-white rounded-lg shadow-xl font-[system-ui,sans-serif] text-gray-800 flex flex-col max-h-[580px] overflow-hidden"
-          variants={popupVariants}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
+          variants={popupVariants} initial="hidden" animate="visible" exit="exit"
         >
-          <motion.header custom={0} variants={sectionVariants} initial="hidden" animate="visible" className="px-5 py-4 border-b border-gray-200">
+          <motion.header custom={0} variants={sectionVariants} initial="hidden" animate="visible"
+            className="px-5 py-4 border-b border-gray-200"
+          >
             <div className="flex items-center justify-between">
               <div className="flex items-center flex-grow min-w-0">
                 <Leaf className="w-6 h-6 text-emerald-600 mr-2 flex-shrink-0" />
                 <h1 className="text-xl font-bold text-gray-800 truncate">Viridis</h1>
               </div>
               <div className="flex items-center ml-2 flex-shrink-0">
-                {data?.product && isValidUrl(data.product.url) && (
+                {data.product && isValidUrl(data.product.url) && (
                   <motion.a
                     variants={interactiveVariants} whileHover="hover" whileTap="tap"
-                    href={ensureProtocol(data.product.url)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title="View Original Product Page"
+                    href={ensureProtocol(data.product.url)} target="_blank" rel="noopener noreferrer"
                     className="text-gray-400 hover:text-emerald-600 transition-colors duration-150 mr-2"
                   >
                     <ExternalLink size={18} />
                   </motion.a>
                 )}
                 <motion.button
-                  onClick={handleClose} 
-                  title="Close Popup"
+                  onClick={handleClose} title="Close Popup"
                   variants={interactiveVariants} whileHover="hover" whileTap="tap"
                   className="text-gray-400 hover:text-red-500 transition-colors duration-150 p-1 rounded-full"
                   aria-label="Close popup"
@@ -323,10 +312,10 @@ const App: React.FC = () => {
                 </motion.button>
               </div>
             </div>
-            {data?.product?.title && (
-                <p className="text-xs text-gray-500 mt-1 truncate" title={data.product.title}>
-                    {data.product.title}
-                </p>
+            {data.product.title && (
+              <p className="text-xs text-gray-500 mt-1 truncate" title={data.product.title}>
+                {data.product.title}
+              </p>
             )}
           </motion.header>
 
@@ -336,19 +325,18 @@ const App: React.FC = () => {
               <p className="mt-3 text-base font-medium text-gray-700">Overall Eco Score</p>
             </motion.section>
 
-            {data.breakdown && Object.keys(data.breakdown).length > 0 && (
+            {Object.keys(data.breakdown).length > 0 && (
               <motion.section custom={2} variants={sectionVariants} initial="hidden" animate="visible">
-                <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2.5">
-                  Breakdown
-                </h3>
+                <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2.5">Breakdown</h3>
                 <div className="space-y-2">
                   {Object.entries(data.breakdown).map(([factor, detailString], idx) => {
-                    const { text, sourceName, sourceUrl } = parseBreakdownStringForLink(detailString);
+                    const { text, citation, sourceUrl, citationTitle, citationRest } = parseBreakdownStringForLink(detailString);
                     const factorIsError = factor.toLowerCase() === 'error';
-                    
+                    console.debug('[Breakdown Debug]', { factor, text, sourceUrl, detailString });
+                    console.debug('[Citation Debug]', { factor, citation, citationTitle, citationRest });
                     return (
-                      <motion.div 
-                        key={factor} 
+                      <motion.div
+                        key={factor}
                         custom={idx} variants={listItemVariants} initial="hidden" animate="visible"
                         className="bg-slate-50 p-3 rounded-md border border-gray-200 text-sm transition-shadow hover:shadow-md"
                       >
@@ -359,22 +347,26 @@ const App: React.FC = () => {
                             </p>
                             <p className="text-xs text-gray-600 mt-0.5">
                               {text || (factorIsError ? "" : "Detail not available")}
+                              {citationTitle ? (
+                                <span> <span className="italic">{citationTitle}</span>{citationRest ? ` ${citationRest}` : ''}</span>
+                              ) : citation ? (
+                                <span className="italic"> {citation}</span>
+                              ) : null}
                             </p>
                           </div>
-                          {factorIsError ? 
-                            <AlertCircle size={16} className="text-red-400 mt-0.5 flex-shrink-0" /> :
-                            <CheckCircle size={16} className="text-emerald-500 mt-0.5 flex-shrink-0" /> 
-                          }
+                          {factorIsError ? (
+                            <AlertCircle size={16} className="text-red-400 mt-0.5 flex-shrink-0" />
+                          ) : (
+                            <CheckCircle size={16} className="text-emerald-500 mt-0.5 flex-shrink-0" />
+                          )}
                         </div>
                         {sourceUrl && (
                           <motion.a
                             variants={interactiveVariants} whileHover={{scale:1.05}} whileTap={{scale:0.95}}
-                            href={ensureProtocol(sourceUrl)}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            href={ensureProtocol(sourceUrl)} target="_blank" rel="noopener noreferrer"
                             className="mt-1.5 inline-flex items-center text-xs text-emerald-600 hover:text-emerald-700 hover:underline transition-colors duration-150 group"
                           >
-                            {sourceName || "Source"} <ExternalLink size={11} className="ml-0.5 opacity-70 group-hover:opacity-100" />
+                            Read More <ExternalLink size={11} className="ml-0.5 opacity-70 group-hover:opacity-100" />
                           </motion.a>
                         )}
                       </motion.div>
@@ -386,17 +378,15 @@ const App: React.FC = () => {
 
             {data.alternatives && data.alternatives.length > 0 && (
               <motion.section custom={3} variants={sectionVariants} initial="hidden" animate="visible">
-                <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2.5">
-                  Sustainable Alternatives
-                </h3>
+                <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2.5">Sustainable Alternatives</h3>
                 <div className="space-y-2.5">
-                  {data.alternatives.map((alt: AlternativeProduct, index: number) => {
+                  {data.alternatives.map((alt, index) => {
                     const smartUrl = getSmartAlternativeUrl(alt);
-                    const isLinkValid = isValidUrl(smartUrl); 
+                    const isLinkValid = isValidUrl(smartUrl);
                     const Icon = alt.type === 'sustainable' ? ShoppingBag : Repeat;
                     return (
-                      <motion.div 
-                        key={index} 
+                      <motion.div
+                        key={index}
                         custom={index} variants={listItemVariants} initial="hidden" animate="visible"
                         className="bg-slate-50 p-3 rounded-md border border-gray-200 transition-shadow hover:shadow-md group"
                       >
@@ -409,18 +399,16 @@ const App: React.FC = () => {
                             </span>
                           )}
                         </div>
-                        {alt.note && <p className="text-xs text-gray-600 mb-1.5 italic leading-tight">
-                          {alt.note}
-                        </p>}
+                        {alt.note && (
+                          <p className="text-xs text-gray-600 mb-1.5 italic leading-tight">{alt.note}</p>
+                        )}
                         {isLinkValid ? (
                           <motion.a
                             variants={interactiveVariants} whileHover={{scale:1.05}} whileTap={{scale:0.95}}
-                            href={smartUrl} 
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            href={smartUrl} target="_blank" rel="noopener noreferrer"
                             className="inline-flex items-center text-xs text-emerald-700 hover:text-emerald-800 hover:underline group-hover:text-emerald-800"
                           >
-                            View Product <ExternalLink size={11} className="ml-0.5 opacity-80 group-hover:opacity-100" />
+                            View Suggestion <ExternalLink size={11} className="ml-0.5 opacity-80 group-hover:opacity-100" />
                           </motion.a>
                         ) : (
                           <span className="inline-flex items-center text-xs text-gray-500">
@@ -435,7 +423,9 @@ const App: React.FC = () => {
             )}
           </main>
 
-          <motion.footer custom={4} variants={sectionVariants} initial="hidden" animate="visible" className="px-5 py-3 bg-slate-50 border-t border-gray-200 flex items-center justify-between">
+          <motion.footer custom={4} variants={sectionVariants} initial="hidden" animate="visible"
+            className="px-5 py-3 bg-slate-50 border-t border-gray-200 flex items-center justify-between"
+          >
             <motion.button
               variants={buttonPressVariants} whileHover="hover" whileTap="tap"
               onClick={() => chrome.tabs.create({ url: 'https://twitter.com/viridis_dev' })}
@@ -449,7 +439,7 @@ const App: React.FC = () => {
               onClick={() => chrome.tabs.create({ url: 'https://www.viridisshopping.com/' })}
               className="flex items-center space-x-1.5 text-xs text-gray-500 hover:text-emerald-700 px-2.5 py-1.5 rounded-md transition-all duration-150 group"
             >
-              <ExternalLink size={14} className="opacity-70 group-hover:opacity-100"/>
+              <ExternalLink size={14} className="opacity-70 group-hover:opacity-100" />
               <span>Viridis Site</span>
             </motion.button>
           </motion.footer>

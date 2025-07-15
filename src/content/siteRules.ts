@@ -12,6 +12,7 @@ export interface SiteRule {
   getProductInfo: () => ProductInfo | null;
 }
 
+
 // --- Helper Functions for DOM Validation ---
 
 const getJsonLdProduct = (): any | null => {
@@ -151,42 +152,50 @@ const siteRules: SiteRule[] = [
   }
 ];
 
-/**
- * The generic rule for sites without a specific configuration.
- * Relies heavily on JSON-LD structured data as a reliable indicator.
- */
+// ** bring in your content-script size + review checks **
+const hasSizeSelector = (): boolean => {
+  const sizePatterns = ['s','m','l','small','medium','large'];
+  return Array.from(document.querySelectorAll('button, select, label, span, div'))
+    .some(el => sizePatterns.some(sz => new RegExp(`\\b${sz}\\b`, 'i').test(el.textContent||'')));
+};
+const hasReviewsOrRatings = (): boolean => {
+  const reviewKeywords = ['review','rating','stars'];
+  return Array.from(document.querySelectorAll('div, span, section, a'))
+    .some(el => reviewKeywords.some(kw => (el.textContent||'').toLowerCase().includes(kw)));
+};
+
 export const genericRule: SiteRule = {
-    host: 'generic',
-    isProductPage: () => {
-        const hasProductSchema = !!getJsonLdProduct();
-        const hasPrice = hasPriceElement();
-        const hasCartButton = hasAddToCartButton();
-        
-        console.debug(`[Viridis Generic Rule] Detection check: 
-          - Has Product Schema: ${hasProductSchema}
-          - Has Price Element: ${hasPrice}
-          - Has Add-to-Cart Button: ${hasCartButton}`);
-
-        return hasProductSchema && hasPrice && hasCartButton;
-    },
-    getProductInfo: () => {
-        const product = getJsonLdProduct();
-        if(!product || !product.name) return null;
-        
-        const price = product.offers?.price ??
-                      (Array.isArray(product.offers) && product.offers[0]?.price) ??
-                      '';
-
-        return {
-            title: product.name,
-            url: window.location.href,
-            site: window.location.hostname,
-            price: String(price) || undefined,
-            brand: product.brand?.name || undefined,
-            materials: product.material || undefined
-        }
+  host: 'generic',
+  // drop the JSON-LD requirement, just use the same heuristics as your contentScript
+  isProductPage: () => {
+    const ok = hasAddToCartButton()
+            && hasSizeSelector()
+            && hasReviewsOrRatings()
+            && hasPriceElement();
+    console.debug('[Viridis Generic] productPage?', ok);
+    return ok;
+  },
+  // if you can’t parse JSON-LD, just fall back to H1 or document.title
+  getProductInfo: (): ProductInfo | null => {
+    // try JSON-LD first
+    const ld = getJsonLdProduct();
+    let title = ld?.name;
+    if (!title) {
+      title = document.querySelector('h1')?.textContent?.trim() || document.title;
     }
-}
+    if (!title) return null;
+    // try price from JSON-LD or page
+    const price = ld?.offers?.price
+      ?? document.querySelector('[itemprop*="price"], .price, #price')?.textContent?.trim();
+    return {
+      title,
+      url: window.location.href,
+      site: window.location.hostname,
+      price: price || undefined,
+      brand: ld?.brand?.name || undefined,
+    };
+  }
+};
 
 /**
  * Finds the appropriate rule for the current website.

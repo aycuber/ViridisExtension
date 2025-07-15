@@ -79,7 +79,7 @@ class ProductDetectionEngine {
       hasSizeSelector() &&
       hasReviewsOrRatings();
 
-    if (this.currentRule.isProductPage(url) && isLikelyProductPage) {
+    if (isLikelyProductPage) {
       console.debug('Viridis: Product page detected.');
 
       const productInfo = this.currentRule.getProductInfo();
